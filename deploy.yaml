@@ -79,7 +79,6 @@ spec:
       type: NodePort
       ports:
       - port: 5432
-        nodePort: 30008
       selector:
         app: postgres
 
@@ -158,4 +157,3 @@ spec:
         ports:
           - name: sonar
             port: 9000
-            nodePort: 30009
