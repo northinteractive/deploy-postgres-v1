@@ -69,30 +69,6 @@ spec:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: root
 ---
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: sonar-extensions
-spec:
-  accessModes:
-   - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: sonar-extensions
-spec:
-  accessModes:
-    - ReadWriteOnce
-  capacity:
-      storage: 1Gi
-  hostPath: 
-    path: "/mnt/sonar/extensions/"
-    type: DirectoryOrCreate
----
     apiVersion: v1
     kind: Service
     metadata:
@@ -106,3 +82,80 @@ spec:
         nodePort: 30008
       selector:
         app: postgres
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: sonarqube
+spec:
+  selector:
+    matchLabels:
+     app: sonarqube
+  replicas: 1
+  template:
+    metadata:
+      name: sonarqube
+      labels:
+        app: sonarqube
+    spec:
+      containers:
+      - name: sonarqube
+        image: sonarqube:latest
+        env:
+          - name: "SONARQUBE_JDBC_USERNAME"
+            value: "postgres"
+          - name: "SONARQUBE_JDBC_URL"
+            value: "jdbc:postgresql://postgres/sonarqube"
+          - name: "SONARQUBE_JDBC_PASSWORD"
+            value: "root"
+        ports:
+          - containerPort: 9000
+            protocol: TCP
+        volumeMounts:
+        - mountPath: /opt/sonarqube/data/
+          name: sonar-data
+        - mountPath: /opt/sonarqube/extensions/
+          name: sonar-extensions
+      volumes:
+      - name: sonar-data
+        persistentVolumeClaim:
+            claimName: sonar-data
+      - name: sonar-extensions
+        persistentVolumeClaim:
+            claimName: sonar-extensions
+    ---
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: sonar-data
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
+---
+    apiVersion: v1
+    kind: PersistentVolume
+    metadata:
+      name: local-storage
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      capacity:
+          storage: 1Gi
+      hostPath: 
+        path: "/opt/sonar/data/"
+        type: DirectoryOrCreate
+---
+    apiVersion: v1
+    kind: Service
+    metadata:
+        name: sonarqube
+    spec:
+        selector:
+          app: sonarqube
+        ports:
+          - name: sonar
+            port: 9000
+            nodePort: 30009
