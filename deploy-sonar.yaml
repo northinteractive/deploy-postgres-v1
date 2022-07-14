@@ -38,7 +38,7 @@ spec:
       - name: sonar-extensions
         persistentVolumeClaim:
             claimName: sonar-extensions
-    ---
+---
     apiVersion: v1
     kind: PersistentVolumeClaim
     metadata:
