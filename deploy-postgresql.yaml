@@ -65,7 +65,7 @@ spec:
       labels:
         app: postgres
     data:
-      POSTGRES_DB: postgresdb
+      POSTGRES_DB: sonarqube
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: root
 ---
