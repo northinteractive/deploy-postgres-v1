@@ -76,10 +76,9 @@ spec:
       labels:
         app: postgres
     spec:
-       ports:
-        - name: postgres
-          port: 5432
-          nodePort: 30432
-       type: NodePort
-       selector:
+      type: NodePort
+      ports:
+      - port: 5432
+        nodePort: 30008
+      selector:
         app: postgres
