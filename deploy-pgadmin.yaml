@@ -10,8 +10,8 @@ spec:
   ports:
   - name: padmin-port
     nodePort: 30165
-    port: 80
-    targetPort: 80
+    port: 8090
+    targetPort: 8090
   selector:
     app: pgadmin
   type: NodePort
@@ -38,12 +38,12 @@ spec:
         - name: PGADMIN_DEFAULT_PASSWORD
           value: password
         - name: PGADMIN_PORT
-          value: "80"
+          value: "8090"
         image: dpage/pgadmin4:3.6
         imagePullPolicy: IfNotPresent
         name: pgadmin
         ports:
-        - containerPort: 80
+        - containerPort: 8090
         resources:
           limits:
             memory: 4096Mi
