@@ -32,7 +32,7 @@ spec:
         app: pgadmin
     spec:
       containers:
-      - env:
+      - env:776813
         - name: PGADMIN_DEFAULT_EMAIL
           value: jon@northinteractive.co
         - name: PGADMIN_DEFAULT_PASSWORD
